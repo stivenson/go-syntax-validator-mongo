@@ -1,6 +1,7 @@
 package mongoparser
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -54,16 +55,32 @@ func TestParser(t *testing.T) {
 		wantErr: `syntax error`,
 	}}
 	for _, tc := range testcases {
-		got, err := Parse([]byte(tc.input))
+		got, err := Parse(tc.input, "insert")
 		var gotErr string
 		if err != nil {
 			gotErr = err.Error()
 		}
 		if gotErr != tc.wantErr {
-			//t.Errorf(`%s err: %v, want %v`, tc.input, gotErr, tc.wantErr)
+			t.Errorf(`%s err: %v, want %v`, tc.input, gotErr, tc.wantErr)
 		}
 		if !reflect.DeepEqual(got, tc.output) {
-			//t.Errorf(`%s: %#v want %#v`, tc.input, got, tc.output)
+			t.Errorf(`%s: %#v want %#v`, tc.input, got, tc.output)
 		}
+	}
+}
+
+func TestCreateParser(t *testing.T) {
+	var input = `{
+   		"_id": "ObjectId(7df78ad8902c)",
+   		"title": "MongoDB Overview", 
+   		"likes": "100"
+	}`
+	var operation = "insert"
+	_, err := Parse(input, operation)
+	if err == nil {
+		fmt.Println("ALL FINE")
+	} else {
+		fmt.Println("ERROR:")
+		fmt.Println(err)
 	}
 }

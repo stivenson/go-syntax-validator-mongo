@@ -7,6 +7,7 @@ import __yyfmt__ "fmt"
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"unicode"
@@ -142,8 +143,10 @@ func setResult(l yyLexer, v map[string]interface{}) {
 }
 
 // Parse parses the input and returs the result.
-func Parse(input []byte) (map[string]interface{}, error) {
-	l := newLex(input)
+func Parse(input string, operation string) (map[string]interface{}, error) {
+	l := newLex([]byte(input))
+	// custom validation by operation
+	fmt.Println(operation)
 	_ = yyParse(l)
 	return l.result, l.err
 }
