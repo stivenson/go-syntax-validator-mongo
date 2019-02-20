@@ -6,48 +6,33 @@ import (
 	"fmt"
 )
 
-var expr string
-
 %}
 
 %union{
-	val string
+	ex string
 }
 
-%type <val> expr
+%token <ex> DB MONGO
 
-%token <val> DB MONGO
-
-%token NUMBER
-
-%%
-
-query:
-        expr 
-        | 
-        mongo
+%% 
+query:  mongo
         |
         db
         ;
 
-expr:   NUMBER
-        {
-            fmt.Printf("\nA number\n");
-        }
-
 db:     DB
         {
-          fmt.Printf("\tDB\n");
+            fmt.Printf("\tDB %s\n", $1 )
         }
         ;
 
-mongo: MONGO 
+mongo:  MONGO
         {
-          fmt.Printf("\tMONGO\n");
+            fmt.Printf("\tMONGO %s\n", $1 )
         }
         ;
+%%
 
-%%  /*  start  of  programs  */
 type mlex struct {
 	expr   string
 	result int
@@ -55,7 +40,9 @@ type mlex struct {
 
 func (f *mlex) Lex(lval *yySymType) int {
 	yyErrorVerbose = true
-	return 0
+    fmt.Println("lval")
+    fmt.Println(lval)
+	return MONGO
 }
 
 func (f *mlex) Error(s string) {
@@ -63,7 +50,7 @@ func (f *mlex) Error(s string) {
 }
 
 func Parse(expr string) int {
-	m := &mlex{expr, 0}
+	m := &mlex{expr: expr}
 	yyParse(m)
 	return m.result
 }

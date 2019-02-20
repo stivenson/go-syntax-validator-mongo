@@ -12,17 +12,14 @@ import (
 	"fmt"
 )
 
-var expr string
-
-//line mongo.y:13
+//line mongo.y:11
 type yySymType struct {
 	yys int
-	val string
+	ex  string
 }
 
 const DB = 57346
 const MONGO = 57347
-const NUMBER = 57348
 
 var yyToknames = [...]string{
 	"$end",
@@ -30,7 +27,6 @@ var yyToknames = [...]string{
 	"$unk",
 	"DB",
 	"MONGO",
-	"NUMBER",
 }
 var yyStatenames = [...]string{}
 
@@ -38,16 +34,18 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line mongo.y:50
-/*  start  of  programs  */
+//line mongo.y:34
+
 type mlex struct {
 	expr   string
 	result int
 }
 
 func (f *mlex) Lex(lval *yySymType) int {
-	yyErrorVerbose = true
-	return 0
+	// yyErrorVerbose = true
+	fmt.Println("lval")
+	fmt.Println(lval)
+	return MONGO
 }
 
 func (f *mlex) Error(s string) {
@@ -55,9 +53,9 @@ func (f *mlex) Error(s string) {
 }
 
 func Parse(expr string) int {
-	m := &mlex{expr, 0}
+	m := &mlex{expr: expr}
 	yyParse(m)
-	return m.result
+	return 1
 }
 
 //line yacctab:1
@@ -69,35 +67,35 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 7
+const yyLast = 5
 
 var yyAct = [...]int{
 
-	7, 6, 5, 4, 3, 1, 2,
+	5, 4, 3, 2, 1,
 }
 var yyPact = [...]int{
 
-	-4, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
+	-4, -1000, -1000, -1000, -1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 6, 5, 4, 3,
+	0, 4, 3, 2,
 }
 var yyR1 = [...]int{
 
-	0, 2, 2, 2, 1, 4, 3,
+	0, 1, 1, 3, 2,
 }
 var yyR2 = [...]int{
 
-	0, 1, 1, 1, 1, 1, 1,
+	0, 1, 1, 1, 1,
 }
 var yyChk = [...]int{
 
-	-1000, -2, -1, -3, -4, 6, 5, 4,
+	-1000, -1, -2, -3, 5, 4,
 }
 var yyDef = [...]int{
 
-	0, -2, 1, 2, 3, 4, 6, 5,
+	0, -2, 1, 2, 4, 3,
 }
 var yyTok1 = [...]int{
 
@@ -105,7 +103,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5, 6,
+	2, 3, 4, 5,
 }
 var yyTok3 = [...]int{
 	0,
@@ -448,23 +446,17 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
+	case 3:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line mongo.y:24
+		{
+			fmt.Printf("\tDB %s\n", yyDollar[1].ex)
+		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line mongo.y:34
+//line mongo.y:30
 		{
-			fmt.Printf("\nA number\n")
-		}
-	case 5:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line mongo.y:39
-		{
-			fmt.Printf("\tDB\n")
-		}
-	case 6:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line mongo.y:45
-		{
-			fmt.Printf("\tMONGO\n")
+			fmt.Printf("\tMONGO %s\n", yyDollar[1].ex)
 		}
 	}
 	goto yystack /* stack new state and value */

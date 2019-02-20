@@ -7,6 +7,7 @@ import (
 func main() {
 
 	fmt.Println("------ MongoDB ---------")
-	res := Parse("expr")
+	res := Parse("db")
 	fmt.Println(res)
+
 }
