@@ -125,3 +125,22 @@ func TestParserJson3(t *testing.T) {
 		fmt.Println("ERROR:", err)
 	}
 }
+
+func TestParserJson4(t *testing.T) {
+	var query = `{
+   		"title": "MongoDB Overview", 
+   		"likes": "100"
+	}`
+
+	var payload = `{
+		"$set": {"size.uom": {"a": "b"}, "status": "P", "last": { "lastModified": "true" } },
+		"likes": [{"size": "cm"},{"size2": "pulg"}]
+   	}`
+	var operation = "insert"
+	_, err := Parse(operation, query, payload)
+	if err == nil {
+		fmt.Println("ALL FINE")
+	} else {
+		fmt.Println("ERROR:", err)
+	}
+}
