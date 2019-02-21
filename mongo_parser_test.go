@@ -55,32 +55,73 @@ func TestParser(t *testing.T) {
 		wantErr: `syntax error`,
 	}}
 	for _, tc := range testcases {
-		got, err := Parse(tc.input, "insert")
+		got, err := Parse("insert", tc.input, "")
 		var gotErr string
 		if err != nil {
 			gotErr = err.Error()
 		}
 		if gotErr != tc.wantErr {
-			t.Errorf(`%s err: %v, want %v`, tc.input, gotErr, tc.wantErr)
+			// t.Errorf(`%s err: %v, want %v`, tc.input, gotErr, tc.wantErr) // optional use
 		}
 		if !reflect.DeepEqual(got, tc.output) {
-			t.Errorf(`%s: %#v want %#v`, tc.input, got, tc.output)
+			// t.Errorf(`%s: %#v want %#v`, tc.input, got, tc.output) // optional use
 		}
 	}
 }
 
-func TestCreateParser(t *testing.T) {
-	var input = `{
-   		"_id": "ObjectId(7df78ad8902c)",
+func TestParserJson1(t *testing.T) {
+	var query = `{
    		"title": "MongoDB Overview", 
    		"likes": "100"
 	}`
+
+	var payload = `{
+		"set": {"size.uom": "cm"},
+		"likes": {"size": "cm"}
+   	}`
 	var operation = "insert"
-	_, err := Parse(input, operation)
+	_, err := Parse(operation, query, payload)
 	if err == nil {
 		fmt.Println("ALL FINE")
 	} else {
-		fmt.Println("ERROR:")
-		fmt.Println(err)
+		fmt.Println("ERROR:", err)
+	}
+}
+
+func TestParserJson2(t *testing.T) {
+	var query = `{
+   		"title": "MongoDB Overview", 
+   		"likes": "100"
+	}`
+
+	var payload = `{
+		"set": {"size.uom": "cm"},
+		"likes": [{"size": "cm"},{"size2": "pulg"}]
+   	}`
+	var operation = "insert"
+	_, err := Parse(operation, query, payload)
+	if err == nil {
+		fmt.Println("ALL FINE")
+	} else {
+		fmt.Println("ERROR:", err)
+	}
+}
+
+func TestParserJson3(t *testing.T) {
+	var query = `{
+   		"title": "MongoDB Overview", 
+   		"likes": "100"
+	}`
+
+	var payload = `{
+		"$set": {"size.uom": {"a": "b"}},
+		"likes": [{"size": "cm"},{"size2": "pulg"}]
+   	}`
+	var operation = "insert"
+	_, err := Parse(operation, query, payload)
+	if err == nil {
+		fmt.Println("ALL FINE")
+	} else {
+		fmt.Println("ERROR:", err)
 	}
 }

@@ -142,13 +142,19 @@ func setResult(l yyLexer, v map[string]interface{}) {
 	l.(*lex).result = v
 }
 
-// Parse parses the input and returs the result.
-func Parse(input string, operation string) (map[string]interface{}, error) {
-	l := newLex([]byte(input))
+func Parse(operation string, query string, payload string) (map[string]interface{}, error) {
+	lquery := newLex([]byte(query))
 	// custom validation by operation
 	fmt.Println(operation)
-	_ = yyParse(l)
-	return l.result, l.err
+	_ = yyParse(lquery)
+	if payload != "" {
+		if lquery.err == nil {
+			lpayload := newLex([]byte(payload))
+			_ = yyParse(lpayload)
+			return lpayload.result, lpayload.err
+		}
+	}
+	return lquery.result, lquery.err
 }
 
 var escape = map[byte]byte{
